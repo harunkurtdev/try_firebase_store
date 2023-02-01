@@ -109,6 +109,39 @@ class _FilmListState extends State<FilmList> {
           "veri4":"aaa",
           "veri4":"aaa",
         });
+
+          firestoreInstance.collection("users").doc("deneme").update({
+            "characteristics" : FieldValue.arrayUnion(["generous","loving","loyal"])
+          }).then((_) {
+            print("success!");
+          });
+
+           firestoreInstance.collection("users").add({
+    "name": "john",
+    "age": 50,
+    "email": "example@example.com",
+    "address": {"street": "street 24", "city": "new york"}
+  }).then((value) {
+    print(value.id);
+    firestoreInstance
+        .collection("users")
+        .doc(value.id)
+        .collection("pets")
+        .add({"petName": "blacky", "petType": "dog", "petAge": 1});
+  });
+
+  firestoreInstance.collection("users").doc("aa").set({
+    "name": "john",
+    "age": 50,
+    "email": "example@example.com",
+    "address": {"street": "street 24", "city": "new york"}
+  }).then((value) {
+    firestoreInstance
+        .collection("users")
+        .doc("deneme")
+        .collection("pets")
+        .add({"petName": "blacky", "petType": "dog", "petAge": 1});
+  });
         
         // print(aa.toString());
        },),
