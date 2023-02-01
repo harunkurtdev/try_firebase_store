@@ -25,10 +25,10 @@ enum enumAppSize{
 
 class singleTonAppSize{
 
-  static final singleTonAppSize _instance = singleTonAppSize._();
+  static singleTonAppSize _instance = singleTonAppSize._();
   singleTonAppSize._();
 
-  factory singleTonAppSize.instance(){
+  static singleTonAppSize get instance  {
     return _instance;
   }
 
@@ -71,6 +71,7 @@ class modelList extends Model {
   void functionX() {
     // TODO: implement functionX
   AppSize.Height;
-  singleTonAppSize.instance().functionZ();
+  singleTonAppSize.instance.functionZ();
+  singleTonAppSize._instance.functionZ();
   }
 }
