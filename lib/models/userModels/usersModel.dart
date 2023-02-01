@@ -1,6 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:try_firebase_store/models/userModels/adress.dart';
 import 'package:try_firebase_store/models/userModels/pets.dart';
 
+@immutable
 class User {
   String? name;
   int? age;

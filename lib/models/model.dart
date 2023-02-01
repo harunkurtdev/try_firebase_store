@@ -1,6 +1,8 @@
 
+import 'package:flutter/material.dart';
 import 'package:try_firebase_store/models/userModels/usersModel.dart';
 
+@immutable
 class model {
   User? keyToken;
 

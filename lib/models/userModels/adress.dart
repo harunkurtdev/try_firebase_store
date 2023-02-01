@@ -1,3 +1,7 @@
+
+import 'package:flutter/material.dart';
+
+@immutable
 class Adress {
   String? street;
   String? city;
