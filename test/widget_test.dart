@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:try_firebase_store/main.dart';
-import 'package:try_firebase_store/model/modelList.dart';
+import 'package:try_firebase_store/models/deneme_files/modelList.dart';
 
 void main() {
   // testWidgets('Counter increments smoke test', (WidgetTester tester) async {

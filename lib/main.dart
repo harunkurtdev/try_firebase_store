@@ -155,8 +155,34 @@ class _FilmListState extends State<FilmList> {
             // This is a example use for 'snapshots in sync'.
             // The view reflects the time of the last Firestore sync; which happens any time a field is updated.
             StreamBuilder(
-              stream: FirebaseFirestore.instance.snapshotsInSync(),
-              builder: (context, _) {
+              stream: FirebaseFirestore.instance.collection("users").get().asStream(),
+              builder: (context, snapshots) {
+                
+                    print(snapshots.data!.docs.first.get("address.city"));
+
+                switch (snapshots.connectionState) {
+                  
+                  case ConnectionState.none:
+                    // TODO: Handle this case.
+                    print("object");
+                    break;
+                  case ConnectionState.waiting:
+                    // TODO: Handle this case.
+                    print("waiting");
+                    break;
+                  case ConnectionState.active:
+                    // TODO: Handle this case.
+                    print("active");
+                    return Text(
+                      'Latest Snapshot: ${DateTime.now()}',
+                      style: Theme.of(context).textTheme.caption,
+                    );
+                    break;
+                  case ConnectionState.done:
+                    // TODO: Handle this case.
+                    break;
+                }
+                // return 
                 return Text(
                   'Latest Snapshot: ${DateTime.now()}',
                   style: Theme.of(context).textTheme.caption,
