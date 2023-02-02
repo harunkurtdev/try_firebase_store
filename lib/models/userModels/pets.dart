@@ -16,8 +16,8 @@ class Pets {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['pet_name'] = this.petName;
-    data['petYpe'] = this.petYpe;
+    data['petName'] = this.petName;
+    data['petType'] = this.petYpe;
     data['petAge'] = this.petAge;
     return data;
   }

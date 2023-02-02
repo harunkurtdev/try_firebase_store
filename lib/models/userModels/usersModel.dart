@@ -13,11 +13,12 @@ class User {
   User({this.name, this.age, this.email, this.adress, this.pets});
 
   User.fromJson(Map<String, dynamic> json) {
+    print(json);
     name = json['name'];
     age = json['age'];
     email = json['email'];
     adress =
-        json['address'] != null ? new Adress.fromJson(json['adress']) : null;
+        json['address'] != null ? new Adress.fromJson(json['address']) : null;
     pets = json['pets'] != null ? new Pets.fromJson(json['pets']) : null;
   }
 

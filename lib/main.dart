@@ -5,6 +5,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:try_firebase_store/models/models.dart';
 import 'package:try_firebase_store/models/userModels/usersModel.dart';
 
 import 'firebase_options.dart';
@@ -37,6 +38,7 @@ final moviesRef = FirebaseFirestore.instance
  .withConverter(fromFirestore: ((snapshot, options) => User.fromJson(snapshot.data()!))
  , toFirestore: (user,_)=>user.toJson()
  );
+//  usersRef.
 
 /// The different ways that we can filter/sort movies.
 enum MovieQuery {
@@ -75,6 +77,8 @@ enum UserEnum{
   name,
   age,
   mail,
+  pets,
+  address,
 }
 extension on Query<User> {
   Query<User>  queryBy(UserEnum userEnum){
@@ -87,11 +91,22 @@ extension on Query<User> {
         break;
       case UserEnum.age:
         // TODO: Handle this case.
-        return where("age",isEqualTo:50);
+        return where("age",isEqualTo:15);
         break;
       case UserEnum.mail:
         // TODO: Handle this case.
         return where("email",isEqualTo:"example@example.com");
+        //return orderBy('likes', descending: query == MovieQuery.likesDesc);
+        break;
+      case UserEnum.pets:
+        // TODO: Handle this case.
+        return orderBy("pets",descending:true);
+        // return where('genre', arrayContainsAny: ['Sci-Fi']);
+        break;
+      case UserEnum.address:
+        // TODO: Handle this case.
+        return orderBy("address",descending:true);
+
         break;
     }
   }
@@ -123,6 +138,7 @@ class FilmList extends StatefulWidget {
 
 class _FilmListState extends State<FilmList> {
   MovieQuery query = MovieQuery.year;
+  UserEnum queryUserEnum = UserEnum.age;
   var firestoreInstance = FirebaseFirestore.instance;
 
   @override
@@ -190,7 +206,7 @@ class _FilmListState extends State<FilmList> {
               stream: FirebaseFirestore.instance.collection("users").get().asStream(),
               builder: (context, snapshots) {
                 
-                    print(snapshots.data!.docs.first.get("address.city"));
+                    // print(snapshots.data!.docs.first.get("address.city"));
 
                 switch (snapshots.connectionState) {
                   
@@ -206,7 +222,8 @@ class _FilmListState extends State<FilmList> {
                     // TODO: Handle this case.
                     print("active");
                     return Text(
-                      'Latest Snapshot: ${DateTime.now()}' + snapshots.data!.docs.first.get("address.city"),
+                      // 'Latest Snapshot: ${DateTime.now()}' + snapshots.data!.docs.first.get("address.city"),
+                     snapshots.data!.docs.first.get("address.city"),
                       style: Theme.of(context).textTheme.caption,
                     );
                     break;
@@ -216,7 +233,8 @@ class _FilmListState extends State<FilmList> {
                 }
                 // return 
                 return Text(
-                  'Latest Snapshot: ${DateTime.now()}',
+                  // 'Latest Snapshot: ${DateTime.now()}',
+                  snapshots.data!.docs.first.get("address.city"),
                   style: Theme.of(context).textTheme.caption,
                 );
               },
@@ -224,34 +242,41 @@ class _FilmListState extends State<FilmList> {
           ],
         ),
         actions: <Widget>[
-          PopupMenuButton<MovieQuery>(
-            onSelected: (value) => setState(() => query = value),
+          PopupMenuButton<UserEnum>(
+            onSelected: (value) => setState(() => queryUserEnum = value),
             icon: const Icon(Icons.sort),
             itemBuilder: (BuildContext context) {
               return [
+                // const PopupMenuItem(
+                //   value: MovieQuery.year,
+                //   child: Text('Sort by Year'),
+                // ),
+                // const PopupMenuItem(
+                //   value: MovieQuery.rated,
+                //   child: Text('Sort by Rated'),
+                // ),
+                // const PopupMenuItem(
+                //   value: MovieQuery.likesAsc,
+                //   child: Text('Sort by Likes ascending'),
+                // ),
+                // const PopupMenuItem(
+                //   value: MovieQuery.likesDesc,
+                //   child: Text('Sort by Likes descending'),
+                // ),
+                // const PopupMenuItem(
+                //   value: MovieQuery.fantasy,
+                //   child: Text('Filter genre Fantasy'),
+                // ),
+                // const PopupMenuItem(
+                //   value: MovieQuery.sciFi,
+                //   child: Text('Filter genre Sci-Fi'),
+                // ),
                 const PopupMenuItem(
-                  value: MovieQuery.year,
-                  child: Text('Sort by Year'),
-                ),
-                const PopupMenuItem(
-                  value: MovieQuery.rated,
-                  child: Text('Sort by Rated'),
-                ),
-                const PopupMenuItem(
-                  value: MovieQuery.likesAsc,
-                  child: Text('Sort by Likes ascending'),
-                ),
-                const PopupMenuItem(
-                  value: MovieQuery.likesDesc,
-                  child: Text('Sort by Likes descending'),
-                ),
-                const PopupMenuItem(
-                  value: MovieQuery.fantasy,
-                  child: Text('Filter genre Fantasy'),
-                ),
-                const PopupMenuItem(
-                  value: MovieQuery.sciFi,
-                  child: Text('Filter genre Sci-Fi'),
+                  value: UserEnum.age,
+                  child: Text('Age'),
+                ),const PopupMenuItem(
+                  value: UserEnum.mail,
+                  child: Text('Mail'),
                 ),
               ];
             },
@@ -289,7 +314,59 @@ class _FilmListState extends State<FilmList> {
             itemCount: data.size,
             itemBuilder: (context, index) {
               return ListTile(
-                  title : Text(data.docs[index].data().email!)
+                  title : Text(data.docs[index].data().adress!.city!),
+                  onTap: ()async {
+                    print(data.docs[index].reference.toString() +"    aaa");
+                    int newLikes = await FirebaseFirestore.instance
+                                .runTransaction<int>((transaction) async {
+                              DocumentSnapshot<User> user =
+                                  await transaction.get<User>(data.docs[index].reference);
+
+                              if (!user.exists) {
+                                throw Exception('Document does not exist!');
+                              }
+
+                              int updatedLikes = user.data()!.age! + 1;
+                              transaction.update(data.docs[index].reference, {'age': updatedLikes});
+                              return updatedLikes;
+                            });
+
+    /////
+    ///
+  final val =FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").get(const GetOptions(
+        serverTimestampBehavior: ServerTimestampBehavior.previous,
+      ));
+    val.then((value) => print(value.data().toString() + "         --------------"));
+  FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").path;
+  FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").snapshots().listen((pets)  {
+
+                    //     for (var pet in pets) {
+                    //       print(pet.data().toString());
+                    //     }
+                    //  });
+
+                    
+                      print(pets.reference.toString() +"             ------------------------------------");
+                      //  DocumentSnapshot<Pets> user =
+                      //             await ;
+                            //     .runTransaction<int>((transaction) async {
+                            //   DocumentSnapshot<Pets> user =
+                            //       await transaction.get<Pets>(data.docs[index].get("pets"));
+
+                            //   if (!user.exists) {
+                            //     throw Exception('Document does not exist!');
+                            //   }
+
+                            //   int updatedLikes = user.data()!.petAge! + 1;
+                            //   transaction.update(data.docs[index].reference, {'petAge': updatedLikes});
+                            //   return updatedLikes;
+                            // });
+
+                  },
+ );
+
+              //////
+                  }
               );
               // return _MovieItem(
               //   data.docs[index].data(),
@@ -317,6 +394,9 @@ class _FilmListState extends State<FilmList> {
     await batch.commit();
   }
 }
+
+
+
 
 /// A single movie row.
 class _MovieItem extends StatelessWidget {
