@@ -5,6 +5,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:try_firebase_store/models/userModels/usersModel.dart';
 
 import 'firebase_options.dart';
 
@@ -31,6 +32,11 @@ final moviesRef = FirebaseFirestore.instance
       fromFirestore: (snapshots, _) => Movie.fromJson(snapshots.data()!),
       toFirestore: (movie, _) => movie.toJson(),
     );
+
+ var usersRef= FirebaseFirestore.instance.collection("users")
+ .withConverter(fromFirestore: ((snapshot, options) => User.fromJson(snapshot.data()!))
+ , toFirestore: (user,_)=>user.toJson()
+ );
 
 /// The different ways that we can filter/sort movies.
 enum MovieQuery {
@@ -61,6 +67,32 @@ extension on Query<Movie> {
 
       case MovieQuery.rated:
         return orderBy('rated', descending: true);
+    }
+  }
+}
+
+enum UserEnum{
+  name,
+  age,
+  mail,
+}
+extension on Query<User> {
+  Query<User>  queryBy(UserEnum userEnum){
+    switch (userEnum) {
+      
+      case UserEnum.name:
+        // TODO: Handle this case.
+         return orderBy("name",descending:true);
+         return where("name",isEqualTo:"john");
+        break;
+      case UserEnum.age:
+        // TODO: Handle this case.
+        return where("age",isEqualTo:50);
+        break;
+      case UserEnum.mail:
+        // TODO: Handle this case.
+        return where("email",isEqualTo:"example@example.com");
+        break;
     }
   }
 }
@@ -98,11 +130,11 @@ class _FilmListState extends State<FilmList> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(onPressed: () async { 
 
-       await firestoreInstance.collection("users").doc("aaa").set({
-          "veri":"aaa",
-          "veri2":"aaa",
-          "veri4":"aaa",
-        });
+      //  await firestoreInstance.collection("users").doc("aaa").set({
+      //     "veri":"aaa",
+      //     "veri2":"aaa",
+      //     "veri4":"aaa",
+      //   });
         await firestoreInstance.collection("model").doc("id1").set({
           "veri":"aaa",
           "veri2":"aaa",
@@ -110,8 +142,8 @@ class _FilmListState extends State<FilmList> {
           "veri4":"aaa",
         });
 
-          firestoreInstance.collection("users").doc("deneme").update({
-            "characteristics" : FieldValue.arrayUnion(["generous","loving","loyal"])
+          firestoreInstance.collection("deneme_sinifi").doc("deneme").update({
+            "characteristics" : FieldValue.arrayUnion(["generous","loving","loyal"])//array olarak verir
           }).then((_) {
             print("success!");
           });
@@ -174,7 +206,7 @@ class _FilmListState extends State<FilmList> {
                     // TODO: Handle this case.
                     print("active");
                     return Text(
-                      'Latest Snapshot: ${DateTime.now()}',
+                      'Latest Snapshot: ${DateTime.now()}' + snapshots.data!.docs.first.get("address.city"),
                       style: Theme.of(context).textTheme.caption,
                     );
                     break;
@@ -237,8 +269,9 @@ class _FilmListState extends State<FilmList> {
           ),
         ],
       ),
-      body: StreamBuilder<QuerySnapshot<Movie>>(
-        stream: moviesRef.queryBy(query).snapshots(),
+      // body: StreamBuilder<QuerySnapshot<Movie>>(
+      body: StreamBuilder<QuerySnapshot<User>>(
+        stream: usersRef.snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -251,14 +284,17 @@ class _FilmListState extends State<FilmList> {
           }
 
           final data = snapshot.requireData;
-
+          
           return ListView.builder(
             itemCount: data.size,
             itemBuilder: (context, index) {
-              return _MovieItem(
-                data.docs[index].data(),
-                data.docs[index].reference,
+              return ListTile(
+                  title : Text(data.docs[index].data().email!)
               );
+              // return _MovieItem(
+              //   data.docs[index].data(),
+              //   data.docs[index].reference,
+              // );
             },
           );
         },

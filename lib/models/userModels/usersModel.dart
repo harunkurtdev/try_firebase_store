@@ -17,7 +17,7 @@ class User {
     age = json['age'];
     email = json['email'];
     adress =
-        json['adress'] != null ? new Adress.fromJson(json['adress']) : null;
+        json['address'] != null ? new Adress.fromJson(json['adress']) : null;
     pets = json['pets'] != null ? new Pets.fromJson(json['pets']) : null;
   }
 
@@ -27,7 +27,7 @@ class User {
     data['age'] = this.age;
     data['email'] = this.email;
     if (this.adress != null) {
-      data['adress'] = this.adress!.toJson();
+      data['address'] = this.adress!.toJson();
     }
     if (this.pets != null) {
       data['pets'] = this.pets!.toJson();
