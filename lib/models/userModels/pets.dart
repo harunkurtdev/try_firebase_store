@@ -9,7 +9,7 @@ class Pets {
   Pets({this.petName, this.petYpe, this.petAge});
 
   Pets.fromJson(Map<String, dynamic> json) {
-    petName = json['pet_name'];
+    petName = json['petName'];
     petYpe = json['petYpe'];
     petAge = json['petAge'];
   }

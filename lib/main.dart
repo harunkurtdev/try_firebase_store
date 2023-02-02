@@ -334,7 +334,22 @@ class _FilmListState extends State<FilmList> {
     /////
     ///
     print("aaaaaaaaaaaaaaaaa");
-    // FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets")
+
+
+    var petsRef= FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets")
+ .withConverter(fromFirestore: ((snapshot, options) => Pets.fromJson(snapshot.data()!))
+ , toFirestore: (pet,_)=>pet.toJson()
+ );
+petsRef.snapshots().first.then((value) {
+  print(value.docs.first.data().petName!);
+});
+petsRef.snapshots().asBroadcastStream(onListen: (subscription) {
+  subscription.onData((data) { 
+    print(data.docs[0].data().petAge!.toString() +"                    pets Data");
+  });
+},);
+
+    // FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets").firestore.;
   final val =FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets").firestore.runTransaction((transaction) async {
  print("aaaaaaaaaaaaaaaaa");
 //  print(transaction.)
