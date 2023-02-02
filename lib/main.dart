@@ -213,10 +213,20 @@ class _FilmListState extends State<FilmList> {
                   case ConnectionState.none:
                     // TODO: Handle this case.
                     print("object");
+                    return Text(
+                      // 'Latest Snapshot: ${DateTime.now()}' + snapshots.data!.docs.first.get("address.city"),
+                     "none",
+                      style: Theme.of(context).textTheme.caption,
+                    );
                     break;
                   case ConnectionState.waiting:
                     // TODO: Handle this case.
                     print("waiting");
+                    return Text(
+                      // 'Latest Snapshot: ${DateTime.now()}' + snapshots.data!.docs.first.get("address.city"),
+                     "waitin",
+                      style: Theme.of(context).textTheme.caption,
+                    );
                     break;
                   case ConnectionState.active:
                     // TODO: Handle this case.
@@ -229,14 +239,19 @@ class _FilmListState extends State<FilmList> {
                     break;
                   case ConnectionState.done:
                     // TODO: Handle this case.
+                    return Text(
+                      // 'Latest Snapshot: ${DateTime.now()}' + snapshots.data!.docs.first.get("address.city"),
+                     snapshots.data!.docs.first.get("address.city"),
+                      style: Theme.of(context).textTheme.caption,
+                    );
                     break;
                 }
                 // return 
-                return Text(
-                  // 'Latest Snapshot: ${DateTime.now()}',
-                  snapshots.data!.docs.first.get("address.city"),
-                  style: Theme.of(context).textTheme.caption,
-                );
+                // return Text(
+                //   // 'Latest Snapshot: ${DateTime.now()}',
+                //   snapshots.data!.docs.first.get("address.city"),
+                //   style: Theme.of(context).textTheme.caption,
+                // );
               },
             )
           ],
@@ -342,12 +357,14 @@ class _FilmListState extends State<FilmList> {
  );
 petsRef.snapshots().first.then((value) {
   print(value.docs.first.data().petName!);
+  print(value.docs.first.reference);
+
 });
-petsRef.snapshots().asBroadcastStream(onListen: (subscription) {
-  subscription.onData((data) { 
-    print(data.docs[0].data().petAge!.toString() +"                    pets Data");
-  });
-},);
+// petsRef.snapshots().asBroadcastStream(onListen: (subscription) {
+//   subscription.onData((data) { 
+//     print(data.docs[0].data().petAge!.toString() +"                    pets Data");
+//   });
+// },);
 
     // FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets").firestore.;
   final val =FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets").firestore.runTransaction((transaction) async {
@@ -359,7 +376,31 @@ petsRef.snapshots().asBroadcastStream(onListen: (subscription) {
     // transaction.update(documentReference, data)
       print(data.docs[2].reference.id.toString() + "              -------------asa--------- ");
       print(data.docs[2].data().toString() + "              -------------asa--------- ");
-      return "aaa";
+      
+
+      petsRef.snapshots().first.then((value) async{
+  // print(value.docs.first.data().petName!);
+  print(value.docs.first.reference);
+   DocumentReference<Pets> petsReference = value.docs.first.reference;
+   
+  //  DocumentSnapshot<Pets> pets =
+  //                                 await transaction.get<Pets>(value.docs.first.reference);
+  //                                  if (!pets.exists) {
+  //                               throw Exception('Document does not exist!');
+  //                             }
+
+                              int updatedLikes = value.docs.first.data().petAge! + 1;
+
+                              Pets petsdata=value.docs.first.data();
+
+                              petsdata.petAge =value.docs.first.data().petAge! + 1;
+                              
+                              petsReference.set(petsdata);
+                              // transaction.update(data.docs[index].reference, {'petAge': updatedLikes});
+                              return updatedLikes;
+
+
+});
                               // DocumentSnapshot<Pets> user =
                               //     await transaction.get<Pets>(data.docs[index].get("pets"));
 
@@ -370,7 +411,7 @@ petsRef.snapshots().asBroadcastStream(onListen: (subscription) {
                               // int updatedLikes = user.data()!.petAge! + 1;
                               // transaction.update(data.docs[index].reference, {'petAge': updatedLikes});
                               // return updatedLikes;
-
+return "aaa";
   });
     // val.then((value) => print(value.data().toString() + "         --------------"));
 //   FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").path;

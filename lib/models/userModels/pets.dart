@@ -10,7 +10,7 @@ class Pets {
 
   Pets.fromJson(Map<String, dynamic> json) {
     petName = json['petName'];
-    petYpe = json['petYpe'];
+    petYpe = json['petType'];
     petAge = json['petAge'];
   }
 

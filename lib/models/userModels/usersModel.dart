@@ -13,7 +13,7 @@ class  User {
   User({this.name, this.age, this.email, this.adress, this.pets});
 
   User.fromJson(Map<String, dynamic> json) {
-    print(json.toString()+ "         json verisi       ");
+    // print(json.toString()+ "         json verisi       ");
     name = json['name'];
     age = json['age'];
     email = json['email'];
