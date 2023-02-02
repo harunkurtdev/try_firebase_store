@@ -3,7 +3,7 @@ import 'package:try_firebase_store/models/userModels/adress.dart';
 import 'package:try_firebase_store/models/userModels/pets.dart';
 
 @immutable
-class User {
+class  User {
   String? name;
   int? age;
   String? email;
@@ -13,7 +13,7 @@ class User {
   User({this.name, this.age, this.email, this.adress, this.pets});
 
   User.fromJson(Map<String, dynamic> json) {
-    print(json);
+    print(json.toString()+ "         json verisi       ");
     name = json['name'];
     age = json['age'];
     email = json['email'];

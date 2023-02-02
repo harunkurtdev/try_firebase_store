@@ -151,18 +151,18 @@ class _FilmListState extends State<FilmList> {
       //     "veri2":"aaa",
       //     "veri4":"aaa",
       //   });
-        await firestoreInstance.collection("model").doc("id1").set({
-          "veri":"aaa",
-          "veri2":"aaa",
-          "veri4":"aaa",
-          "veri4":"aaa",
-        });
+        // await firestoreInstance.collection("model").doc("id1").set({
+        //   "veri":"aaa",
+        //   "veri2":"aaa",
+        //   "veri4":"aaa",
+        //   "veri4":"aaa",
+        // });
 
-          firestoreInstance.collection("deneme_sinifi").doc("deneme").update({
-            "characteristics" : FieldValue.arrayUnion(["generous","loving","loyal"])//array olarak verir
-          }).then((_) {
-            print("success!");
-          });
+        //   firestoreInstance.collection("deneme_sinifi").doc("deneme").update({
+        //     "characteristics" : FieldValue.arrayUnion(["generous","loving","loyal"])//array olarak verir
+        //   }).then((_) {
+        //     print("success!");
+        //   });
 
            firestoreInstance.collection("users").add({
     "name": "john",
@@ -178,18 +178,18 @@ class _FilmListState extends State<FilmList> {
         .add({"petName": "blacky", "petType": "dog", "petAge": 1});
   });
 
-  firestoreInstance.collection("users").doc("aa").set({
-    "name": "john",
-    "age": 50,
-    "email": "example@example.com",
-    "address": {"street": "street 24", "city": "new york"}
-  }).then((value) {
-    firestoreInstance
-        .collection("users")
-        .doc("deneme")
-        .collection("pets")
-        .add({"petName": "blacky", "petType": "dog", "petAge": 1});
-  });
+  // firestoreInstance.collection("users").doc("aa").set({
+  //   "name": "john",
+  //   "age": 50,
+  //   "email": "example@example.com",
+  //   "address": {"street": "street 24", "city": "new york"}
+  // }).then((value) {
+  //   firestoreInstance
+  //       .collection("users")
+  //       .doc("deneme")
+  //       .collection("pets")
+  //       .add({"petName": "blacky", "petType": "dog", "petAge": 1});
+  // });
         
         // print(aa.toString());
        },),
@@ -316,7 +316,7 @@ class _FilmListState extends State<FilmList> {
               return ListTile(
                   title : Text(data.docs[index].data().adress!.city!),
                   onTap: ()async {
-                    print(data.docs[index].reference.toString() +"    aaa");
+                    // print(data.docs[index].reference.toString() +"    aaa");
                     int newLikes = await FirebaseFirestore.instance
                                 .runTransaction<int>((transaction) async {
                               DocumentSnapshot<User> user =
@@ -333,37 +333,58 @@ class _FilmListState extends State<FilmList> {
 
     /////
     ///
-  final val =FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").get(const GetOptions(
-        serverTimestampBehavior: ServerTimestampBehavior.previous,
-      ));
-    val.then((value) => print(value.data().toString() + "         --------------"));
-  FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").path;
-  FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").snapshots().listen((pets)  {
+    print("aaaaaaaaaaaaaaaaa");
+    // FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets")
+  final val =FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference.id}").collection("pets").firestore.runTransaction((transaction) async {
+ print("aaaaaaaaaaaaaaaaa");
+//  print(transaction.)
+    // print(transaction.get("""XclR9wS6WmYnM8ooOjbj""").toString() +"             ------------------------------------");
+    // transaction.set(documentReference, data)
+    // transaction.set(documentReference, data)
+    // transaction.update(documentReference, data)
+      print(data.docs[2].reference.id.toString() + "              -------------asa--------- ");
+      print(data.docs[2].data().toString() + "              -------------asa--------- ");
+      return "aaa";
+                              // DocumentSnapshot<Pets> user =
+                              //     await transaction.get<Pets>(data.docs[index].get("pets"));
 
-                    //     for (var pet in pets) {
-                    //       print(pet.data().toString());
-                    //     }
-                    //  });
+                              // if (!user.exists) {
+                              //   throw Exception('Document does not exist!');
+                              // }
+
+                              // int updatedLikes = user.data()!.petAge! + 1;
+                              // transaction.update(data.docs[index].reference, {'petAge': updatedLikes});
+                              // return updatedLikes;
+
+  });
+    // val.then((value) => print(value.data().toString() + "         --------------"));
+//   FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").path;
+//   FirebaseFirestore.instance.collection("users").doc("${data.docs[index].reference}.pets").snapshots().listen((pets)  {
+
+//                     //     for (var pet in pets) {
+//                     //       print(pet.data().toString());
+//                     //     }
+//                     //  });
 
                     
-                      print(pets.reference.toString() +"             ------------------------------------");
-                      //  DocumentSnapshot<Pets> user =
-                      //             await ;
-                            //     .runTransaction<int>((transaction) async {
-                            //   DocumentSnapshot<Pets> user =
-                            //       await transaction.get<Pets>(data.docs[index].get("pets"));
+//                       print(pets.reference.toString() +"             ------------------------------------");
+//                       //  DocumentSnapshot<Pets> user =
+//                       //             await ;
+//                             //     .runTransaction<int>((transaction) async {
+//                             //   DocumentSnapshot<Pets> user =
+//                             //       await transaction.get<Pets>(data.docs[index].get("pets"));
 
-                            //   if (!user.exists) {
-                            //     throw Exception('Document does not exist!');
-                            //   }
+//                             //   if (!user.exists) {
+//                             //     throw Exception('Document does not exist!');
+//                             //   }
 
-                            //   int updatedLikes = user.data()!.petAge! + 1;
-                            //   transaction.update(data.docs[index].reference, {'petAge': updatedLikes});
-                            //   return updatedLikes;
-                            // });
+//                             //   int updatedLikes = user.data()!.petAge! + 1;
+//                             //   transaction.update(data.docs[index].reference, {'petAge': updatedLikes});
+//                             //   return updatedLikes;
+//                             // });
 
-                  },
- );
+//                   },
+//  );
 
               //////
                   }
